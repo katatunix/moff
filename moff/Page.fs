@@ -7,10 +7,8 @@ open NghiaBui.Common.Misc
 module Page =
 
     let private padZero (i : int) =
-        let mutable s = string i
-        while s.Length < 4 do
-            s <- "0" + s
-        s
+        let rec loop (s : string) = if s.Length >= 4 then s else loop ("0" + s)
+        loop (string i)
 
     let private getType (headers : Map<string, string>) =
         match headers.TryFind "Content-Type" with

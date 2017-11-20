@@ -4,6 +4,10 @@ open MyConsole
 
 module Uc =
 
+    let private cleanErrorMsg (msg : string) =
+        let i = msg.IndexOf "\n"
+        if i = -1 then msg else msg.Substring (0, i)
+
     let downloadChapter baseFolder url =
         sprintf "Chapter url: %s" url |> infoln
         sprintf "Fetch chapter info ..." |> infoln
@@ -20,12 +24,15 @@ module Uc =
             |> Chapter.download
                     System.Environment.ProcessorCount
                     baseFolder
-                    (fun index total pageUrl ok ->
-                        let msg = sprintf "Page %d/%d. %s " index total pageUrl
-                        if ok then
-                            infoln (msg + "[OK]")
-                        else
-                            errorln (msg + "[ERROR]"))
+                    (fun index total pageUrl result ->
+                        sprintf "Page %d/%d. " index total |> green
+                        match result with
+                        | Ok _ ->
+                            sprintf "%s [OK]" pageUrl |> infoln
+                        | Error msg ->
+                            sprintf "%s " pageUrl |> info
+                            "[ERROR]" |> errorln
+                            msg |> cleanErrorMsg |> errorln )
 
     let private processManga url f =
         sprintf "Manga url: %s" url |> infoln
@@ -47,9 +54,9 @@ module Uc =
             |> List.iteri (fun i { Url = chapterUrl } ->
                 let i = i + 1
                 if fromChapter <= i && i <= toChapter then
-                    sprintf "================================================================" |> infoln
-                    sprintf "Chapter %d/%d" i chapterNum |> infoln
-                    sprintf "================================================================" |> infoln
+                    sprintf "================================================================" |> greenln
+                    sprintf "Chapter %d/%d" i chapterNum |> greenln
+                    sprintf "================================================================" |> greenln
                     downloadChapter baseFolder chapterUrl))
 
     let viewMangaInfo url =
@@ -57,4 +64,6 @@ module Uc =
             let chapterNum = manga.Chapters.Length
             manga.Chapters
             |> List.iteri (fun i chapter ->
-                sprintf "Chapter %d/%d. %s (%s)" (i + 1) chapterNum chapter.Title chapter.Url |> infoln))
+                sprintf "Chapter %d/%d. " (i + 1) chapterNum |> green
+                chapter.Title + " " |> info
+                chapter.Url |> warnln))

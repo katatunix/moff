@@ -27,8 +27,8 @@ module Chapter =
                 | Some (pageUrl, index) ->
                     match Page.downloadHardly pageUrl folder index with
                     | Ok _ ->
-                        lock oDone (fun _ -> onPageDone index total pageUrl true)
-                    | Error _ ->
-                        lock oDone (fun _ -> onPageDone index total pageUrl false)
+                        lock oDone (fun _ -> onPageDone index total pageUrl (Ok ()))
+                    | Error msg ->
+                        lock oDone (fun _ -> onPageDone index total pageUrl (Error msg))
                     loop ()
             loop ())

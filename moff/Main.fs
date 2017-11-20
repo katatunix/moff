@@ -7,18 +7,16 @@ open MyConsole
 module Main =
 
     let printAbout () =
-        Console.ForegroundColor <- ConsoleColor.Green
-        Console.WriteLine "==========================================================="
-        Console.WriteLine "              moff 1.0 - katatunix@gmail.com"
-        Console.WriteLine "==========================================================="
-        Console.ResetColor ()
+        greenln "================================================================"
+        greenln "              moff 1.0 - katatunix@gmail.com"
+        greenln "================================================================"
 
     let printUsage () =
-        infoln "Usage: moff.exe (chapter|manga|manga-info) <params>"
-        infoln "    chapter <baseFolder> <url>"
-        infoln "    manga <baseFolder> url"
-        infoln "    manga <baseFolder> url <fromChapter> <toChapter>"
-        infoln "    manga-info url"
+        greenln "Usage: moff.exe (chapter|manga|manga-info) <params>"
+        greenln "    chapter <baseFolder> <url>"
+        greenln "    manga <baseFolder> <url>"
+        greenln "    manga <baseFolder> <url> <fromChapter> <toChapter>"
+        greenln "    manga-info <url>"
 
     [<EntryPoint>]
     let main argv =
