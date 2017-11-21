@@ -2,8 +2,10 @@
 
 module WebSite =
 
-    let detect (url : string) =
+    let detect (url : string) : Parser =
         if url.Contains "truyentranhonline.vn" then
-            (TruyenTranhOnline.fetchChapterInfo, TruyenTranhOnline.fetchMangaInfo)
+            TruyenTranhOnline () :> Parser
+        elif url.Contains "truyentranhtuan.com" then
+            TruyenTranhTuan () :> Parser
         else
-            (TruyenTranhOnline.fetchChapterInfo, TruyenTranhOnline.fetchMangaInfo)
+            TruyenTranhOnline () :> Parser

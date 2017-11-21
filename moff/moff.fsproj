@@ -58,8 +58,12 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Domain.fs" />
     <Compile Include="Page.fs" />
+    <Compile Include="Parser.fs" />
     <Compile Include="Chapter.fs" />
+    <Compile Include="Manga.fs" />
+    <Compile Include="CommonParse.fs" />
     <Compile Include="TruyenTranhOnline.fs" />
+    <Compile Include="TruyenTranhTuan.fs" />
     <Compile Include="Website.fs" />
     <Compile Include="MyConsole.fs" />
     <Compile Include="Uc.fs" />

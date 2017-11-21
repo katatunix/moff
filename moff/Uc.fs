@@ -4,66 +4,71 @@ open MyConsole
 
 module Uc =
 
-    let private cleanErrorMsg (msg : string) =
+    let private firstLine (msg : string) =
         let i = msg.IndexOf "\n"
         if i = -1 then msg else msg.Substring (0, i)
 
-    let downloadChapter baseFolder url =
+    let downloadChapter mangaFolder url =
         sprintf "Chapter url: %s" url |> infoln
         sprintf "Fetch chapter info ..." |> infoln
-        match url |> (WebSite.detect url |> fst) with
+
+        WebSite.detect url
+        |> Chapter.fetchInfo url
+        |> function
         | Error msg ->
             errorln "[ERROR] Could not fetch chapter info"
+            sprintf "%s" msg |> errorln
 
         | Ok chapter ->
             sprintf "Chapter title: %s" chapter.Header.Title |> infoln
             sprintf "Page number: %d" chapter.PageUrls.Length |> infoln
             sprintf "Download pages ..." |> infoln
-
             chapter
             |> Chapter.download
-                    System.Environment.ProcessorCount
-                    baseFolder
-                    (fun index total pageUrl result ->
-                        sprintf "Page %d/%d. " index total |> green
-                        match result with
-                        | Ok _ ->
-                            sprintf "%s [OK]" pageUrl |> infoln
-                        | Error msg ->
-                            sprintf "%s " pageUrl |> info
-                            "[ERROR]" |> errorln
-                            msg |> cleanErrorMsg |> errorln )
+                System.Environment.ProcessorCount
+                mangaFolder
+                (fun index total pageUrl result ->
+                    sprintf "Page %d/%d. " index total |> green
+                    match result with
+                    | Ok _ ->
+                        sprintf "%s [OK]" pageUrl |> infoln
+                    | Error msg ->
+                        sprintf "%s " pageUrl |> info
+                        "[ERROR]" |> errorln
+                        msg |> firstLine |> errorln)
 
-    let private processManga url f =
+    let private processManga url cont =
         sprintf "Manga url: %s" url |> infoln
-        sprintf "Fetch manga info ..." |> infoln
-        match url |> (WebSite.detect url |> snd) with
+        infoln "Fetch manga info ..."
+
+        WebSite.detect url
+        |> Manga.fetchInfo url
+        |> function
         | Error msg ->
             errorln "[ERROR] Could not fetch manga info"
-
+            sprintf "%s" msg |> errorln
         | Ok manga ->
             sprintf "Chapter number: %d" manga.Chapters.Length |> infoln
+            cont manga
 
-            f manga
-
-    let downloadManga baseFolder url fromChapter toChapter =
+    let downloadManga mangaFolder url fromChapter toChapter =
         processManga url (fun manga ->
-            let chapterNum = manga.Chapters.Length
             sprintf "Download chapters ..." |> infoln
+            let total = manga.Chapters.Length
             manga.Chapters
             |> List.iteri (fun i { Url = chapterUrl } ->
                 let i = i + 1
                 if fromChapter <= i && i <= toChapter then
                     sprintf "================================================================" |> greenln
-                    sprintf "Chapter %d/%d" i chapterNum |> greenln
+                    sprintf "Chapter %d/%d" i total |> greenln
                     sprintf "================================================================" |> greenln
-                    downloadChapter baseFolder chapterUrl))
+                    downloadChapter mangaFolder chapterUrl))
 
     let viewMangaInfo url =
         processManga url (fun manga ->
-            let chapterNum = manga.Chapters.Length
+            let total = manga.Chapters.Length
             manga.Chapters
             |> List.iteri (fun i chapter ->
-                sprintf "Chapter %d/%d. " (i + 1) chapterNum |> green
+                sprintf "Chapter %d/%d. " (i + 1) total |> green
                 chapter.Title + " " |> info
                 chapter.Url |> warnln))

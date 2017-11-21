@@ -8,15 +8,15 @@ module Main =
 
     let printAbout () =
         greenln "================================================================"
-        greenln "              moff 1.0 - katatunix@gmail.com"
+        greenln "                moff 1.0 - katatunix@gmail.com"
         greenln "================================================================"
 
     let printUsage () =
         greenln "Usage: moff.exe (chapter|manga|manga-info) <params>"
-        greenln "    chapter <baseFolder> <url>"
-        greenln "    manga <baseFolder> <url>"
-        greenln "    manga <baseFolder> <url> <fromChapter> <toChapter>"
-        greenln "    manga-info <url>"
+        greenln "    chapter <mangaFolder> <chapterUrl>"
+        greenln "    manga <mangaFolder> <mangaUrl>"
+        greenln "    manga <mangaFolder> <mangaUrl> <fromChapter> <toChapter>"
+        greenln "    manga-info <mangaUrl>"
 
     [<EntryPoint>]
     let main argv =
