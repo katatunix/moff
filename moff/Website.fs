@@ -2,10 +2,10 @@
 
 module WebSite =
 
-    let detect (url : string) : Parser =
+    let detect (url : string) : Result<Parser, string> =
         if url.Contains "truyentranhonline.vn" then
-            TruyenTranhOnline () :> Parser
+            TruyenTranhOnline () :> Parser |> Ok
         elif url.Contains "truyentranhtuan.com" then
-            TruyenTranhTuan () :> Parser
+            TruyenTranhTuan () :> Parser |> Ok
         else
-            TruyenTranhOnline () :> Parser
+            Error "Not support this website"

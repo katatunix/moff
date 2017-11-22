@@ -4,7 +4,7 @@ open FSharp.Data
 open System.IO
 open NghiaBui.Common.Misc
 
-module Page =
+module DownloadPage =
 
     let private padZero (i : int) =
         let rec loop (s : string) = if s.Length >= 4 then s else loop ("0" + s)
@@ -19,7 +19,7 @@ module Page =
             |> List.tryFind contentType.Contains
             |> Option.defaultValue "png"
 
-    let downloadExn url folder index =
+    let execExn url folder index =
         let res = Http.Request (url, timeout = 30000)
         let _type = getType res.Headers
         let _name = (padZero index) + "." + _type
@@ -31,9 +31,9 @@ module Page =
         | Binary bytes ->
             File.OpenWrite(_path).Write(bytes, 0, bytes.Length)
 
-    let download url folder index =
-        try downloadExn url folder index |> Ok
+    let exec url folder index =
+        try execExn url folder index |> Ok
         with ex -> Error ex.Message
 
-    let downloadHardly url folder index =
-        tryHard 3 1000 (fun _ -> downloadExn url folder index)
+    let execHardly url folder index =
+        tryHard 3 1000 (fun _ -> execExn url folder index)

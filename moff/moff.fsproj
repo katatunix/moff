@@ -56,11 +56,9 @@
     <None Include="packages.config" />
     <None Include="app.config" />
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Domain.fs" />
-    <Compile Include="Page.fs" />
-    <Compile Include="Parser.fs" />
-    <Compile Include="Chapter.fs" />
-    <Compile Include="Manga.fs" />
+    <Compile Include="Core.fs" />
+    <Compile Include="DownloadPage.fs" />
+    <Compile Include="DownloadChapter.fs" />
     <Compile Include="CommonParse.fs" />
     <Compile Include="TruyenTranhOnline.fs" />
     <Compile Include="TruyenTranhTuan.fs" />

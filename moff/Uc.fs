@@ -1,5 +1,7 @@
 ﻿namespace moff
 
+open System.IO
+open NghiaBui.Common.Monads.Rop
 open MyConsole
 
 module Uc =
@@ -12,19 +14,21 @@ module Uc =
         sprintf "Chapter url: %s" url |> infoln
         sprintf "Fetch chapter info ..." |> infoln
 
-        WebSite.detect url
-        |> Chapter.fetchInfo url
+        rop {
+            let! parser = WebSite.detect url
+            let! html = fetchHtml url
+            return! parseChapterInfo url html parser }
+        
         |> function
         | Error msg ->
-            errorln "[ERROR] Could not fetch chapter info"
-            sprintf "%s" msg |> errorln
+            sprintf "[ERROR] %s" msg |> errorln
 
-        | Ok chapter ->
-            sprintf "Chapter title: %s" chapter.Header.Title |> infoln
-            sprintf "Page number: %d" chapter.PageUrls.Length |> infoln
+        | Ok chapterInfo ->
+            sprintf "Chapter title: %s" chapterInfo.Header.Title |> infoln
+            sprintf "Page number: %d" chapterInfo.PageUrls.Length |> infoln
             sprintf "Download pages ..." |> infoln
-            chapter
-            |> Chapter.download
+            chapterInfo
+            |> DownloadChapter.exec
                 System.Environment.ProcessorCount
                 mangaFolder
                 (fun index total pageUrl result ->
@@ -33,42 +37,46 @@ module Uc =
                     | Ok _ ->
                         sprintf "%s [OK]" pageUrl |> infoln
                     | Error msg ->
-                        sprintf "%s " pageUrl |> info
-                        "[ERROR]" |> errorln
+                        sprintf "%s " pageUrl |> info; "[ERROR]" |> errorln
                         msg |> firstLine |> errorln)
 
     let private processManga url cont =
         sprintf "Manga url: %s" url |> infoln
         infoln "Fetch manga info ..."
 
-        WebSite.detect url
-        |> Manga.fetchInfo url
+        rop {
+            let! parser = WebSite.detect url
+            let! html = fetchHtml url
+            return! parseMangaInfo url html parser }
+
         |> function
         | Error msg ->
-            errorln "[ERROR] Could not fetch manga info"
-            sprintf "%s" msg |> errorln
-        | Ok manga ->
-            sprintf "Chapter number: %d" manga.Chapters.Length |> infoln
-            cont manga
+            sprintf "[ERROR] %s" msg |> errorln
+        | Ok mangaInfo ->
+            sprintf "Chapter number: %d" mangaInfo.ChapterHeaders.Length |> infoln
+            cont mangaInfo
 
     let downloadManga mangaFolder url fromChapter toChapter =
-        processManga url (fun manga ->
+        processManga url (fun mangaInfo ->
+            Directory.CreateDirectory mangaFolder |> ignore
+            File.WriteAllText (Path.Combine (mangaFolder, "link.txt"), url)
+
             sprintf "Download chapters ..." |> infoln
-            let total = manga.Chapters.Length
-            manga.Chapters
+            let total = mangaInfo.ChapterHeaders.Length
+            mangaInfo.ChapterHeaders
             |> List.iteri (fun i { Url = chapterUrl } ->
                 let i = i + 1
                 if fromChapter <= i && i <= toChapter then
-                    sprintf "================================================================" |> greenln
+                    sprintf "==================================" |> greenln
                     sprintf "Chapter %d/%d" i total |> greenln
-                    sprintf "================================================================" |> greenln
+                    sprintf "==================================" |> greenln
                     downloadChapter mangaFolder chapterUrl))
 
     let viewMangaInfo url =
-        processManga url (fun manga ->
-            let total = manga.Chapters.Length
-            manga.Chapters
-            |> List.iteri (fun i chapter ->
+        processManga url (fun mangaInfo ->
+            let total = mangaInfo.ChapterHeaders.Length
+            mangaInfo.ChapterHeaders
+            |> List.iteri (fun i chapterHeader ->
                 sprintf "Chapter %d/%d. " (i + 1) total |> green
-                chapter.Title + " " |> info
-                chapter.Url |> warnln))
+                chapterHeader.Title + " " |> info
+                chapterHeader.Url |> warnln))

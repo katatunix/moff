@@ -19,7 +19,6 @@ module CommonParse =
                 loop (header :: acc) urlEnd
         loop [] 0
 
-
     let parseTitleInStandardTag (html : string) =
         let KEY = "<title>"
         let i = (html.IndexOf KEY) + KEY.Length
