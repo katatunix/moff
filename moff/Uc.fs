@@ -70,7 +70,7 @@ module Uc =
                     sprintf "==================================" |> greenln
                     sprintf "Chapter %d/%d" i total |> greenln
                     sprintf "==================================" |> greenln
-                    downloadChapter mangaFolder chapterUrl))
+                    downloadChapter chapterUrl mangaFolder))
 
     let viewMangaInfo url =
         processManga url (fun mangaInfo ->
