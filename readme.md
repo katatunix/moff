@@ -21,3 +21,4 @@ Examples:
     moff.exe manga D:/manga/yaiba http://truyentranhonline.vn/yaiba 3 7
     moff.exe manga-info http://truyentranhonline.vn/yaiba
 ```
+* In order to know the values of `<fromChapter>` and `<toChapter>` you should run `moff.exe manga-info <mangaUrl>` first.
