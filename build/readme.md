@@ -5,7 +5,7 @@
 * truyentranhtuan.com
 
 ## Usage:
-* Go to `/moff/build` folder.
+* Go to `/build` folder.
 * Open Command Prompt (Windows) or Terminal (macOS, Linux).
 * Run `moff.exe` with parameters as described below:
 

@@ -1,7 +1,4 @@
-/moff/build/tmp/
-/moff/build/*.pdb
-/moff/build/*.xml
-/moff/build/System.ValueTuple.*
+/moff/build/
 
 # Autosave files
 *~
