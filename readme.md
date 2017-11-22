@@ -11,14 +11,15 @@
 
 ```
 moff.exe (chapter|manga|manga-info) <params>
-    chapter <mangaFolder> <chapterUrl>
-    manga <mangaFolder> <mangaUrl>
-    manga <mangaFolder> <mangaUrl> <fromChapter> <toChapter>
+    chapter <chapterUrl> <mangaFolder>
+    manga <mangaUrl> <mangaFolder>
+    manga <mangaUrl> <mangaFolder> <fromChapter> <toChapter>
     manga-info <mangaUrl>
 Examples:
-    moff.exe chapter D:/manga/yaiba http://truyentranhonline.vn/yaiba/?id=21809&load=0
-    moff.exe manga D:/manga/yaiba http://truyentranhonline.vn/yaiba
-    moff.exe manga D:/manga/yaiba http://truyentranhonline.vn/yaiba 3 7
+    moff.exe chapter "http://truyentranhonline.vn/yaiba/?id=21809&load=0" D:/manga/yaiba
+    moff.exe manga http://truyentranhonline.vn/yaiba D:/manga/yaiba
+    moff.exe manga http://truyentranhonline.vn/yaiba D:/manga/yaiba 3 7
     moff.exe manga-info http://truyentranhonline.vn/yaiba
 ```
 * In order to know the values of `<fromChapter>` and `<toChapter>` you should run `moff.exe manga-info <mangaUrl>` first.
+* Be careful with `&` and spaces, if the url (or any parameter in general) contains those symbols, it must be rounded with a couple of `"`, as in the first example above.

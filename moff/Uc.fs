@@ -10,7 +10,7 @@ module Uc =
         let i = msg.IndexOf "\n"
         if i = -1 then msg else msg.Substring (0, i)
 
-    let downloadChapter mangaFolder url =
+    let downloadChapter url mangaFolder =
         sprintf "Chapter url: %s" url |> infoln
         sprintf "Fetch chapter info ..." |> infoln
 
@@ -56,7 +56,7 @@ module Uc =
             sprintf "Chapter number: %d" mangaInfo.ChapterHeaders.Length |> infoln
             cont mangaInfo
 
-    let downloadManga mangaFolder url fromChapter toChapter =
+    let downloadManga url mangaFolder fromChapter toChapter =
         processManga url (fun mangaInfo ->
             Directory.CreateDirectory mangaFolder |> ignore
             File.WriteAllText (Path.Combine (mangaFolder, "link.txt"), url)

@@ -14,14 +14,14 @@ module Main =
 
     let printUsage () =
         infoln "Usage: moff.exe (chapter|manga|manga-info) <params>"
-        infoln "    chapter <mangaFolder> <chapterUrl>"
-        infoln "    manga <mangaFolder> <mangaUrl>"
-        infoln "    manga <mangaFolder> <mangaUrl> <fromChapter> <toChapter>"
+        infoln "    chapter <chapterUrl> <mangaFolder>"
+        infoln "    manga <mangaUrl> <mangaFolder>"
+        infoln "    manga <mangaUrl> <mangaFolder> <fromChapter> <toChapter>"
         infoln "    manga-info <mangaUrl>"
         infoln "Examples:"
-        infoln "    moff.exe chapter D:/manga/yaiba http://truyentranhonline.vn/yaiba/?id=21809&load=0"
-        infoln "    moff.exe manga D:/manga/yaiba http://truyentranhonline.vn/yaiba"
-        infoln "    moff.exe manga D:/manga/yaiba http://truyentranhonline.vn/yaiba 3 7"
+        infoln "    moff.exe chapter http://truyentranhonline.vn/yaiba/?id=21809&load=0 D:/manga/yaiba"
+        infoln "    moff.exe manga http://truyentranhonline.vn/yaiba D:/manga/yaiba"
+        infoln "    moff.exe manga http://truyentranhonline.vn/yaiba D:/manga/yaiba 3 7"
         infoln "    moff.exe manga-info http://truyentranhonline.vn/yaiba"
         infoln "Supported websites:"
         infoln "    truyentranhonline.vn"
@@ -33,14 +33,14 @@ module Main =
 
         match argv with
 
-        | [| "chapter"; mangaFolder; chapterUrl |] ->
-            Uc.downloadChapter mangaFolder chapterUrl
+        | [| "chapter"; chapterUrl; mangaFolder |] ->
+            Uc.downloadChapter chapterUrl mangaFolder
 
-        | [| "manga"; mangaFolder; mangaUrl |] ->
-            Uc.downloadManga mangaFolder mangaUrl 1 System.Int32.MaxValue
+        | [| "manga"; mangaUrl; mangaFolder |] ->
+            Uc.downloadManga mangaUrl mangaFolder 1 System.Int32.MaxValue
 
-        | [| "manga"; mangaFolder; mangaUrl; Int fromChapter; Int toChapter |] ->
-            Uc.downloadManga mangaFolder mangaUrl fromChapter toChapter
+        | [| "manga"; mangaUrl; mangaFolder; Int fromChapter; Int toChapter |] ->
+            Uc.downloadManga mangaUrl mangaFolder fromChapter toChapter
 
         | [| "manga-info"; mangaUrl |] ->
             Uc.viewMangaInfo mangaUrl
