@@ -34,16 +34,16 @@ module Main =
         match argv with
 
         | [| "chapter"; chapterUrl; mangaFolder |] ->
-            Uc.downloadChapter chapterUrl mangaFolder
+            UcChapter.download chapterUrl mangaFolder
 
         | [| "manga"; mangaUrl; mangaFolder |] ->
-            Uc.downloadManga mangaUrl mangaFolder 1 System.Int32.MaxValue
+            UcManga.download mangaUrl mangaFolder 1 System.Int32.MaxValue
 
         | [| "manga"; mangaUrl; mangaFolder; Int fromChapter; Int toChapter |] ->
-            Uc.downloadManga mangaUrl mangaFolder fromChapter toChapter
+            UcManga.download mangaUrl mangaFolder fromChapter toChapter
 
         | [| "manga-info"; mangaUrl |] ->
-            Uc.viewMangaInfo mangaUrl
+            UcManga.viewInfo mangaUrl
 
         | _ ->
             printUsage ()

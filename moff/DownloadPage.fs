@@ -22,7 +22,7 @@ module DownloadPage =
     let execExn url folder index =
         let res = Http.Request (url, timeout = 30000)
         let _type = getType res.Headers
-        let _name = (padZero index) + "." + _type
+        let _name = sprintf "%s.%s" (padZero index) _type
         let _path = Path.Combine (folder, _name)
 
         match res.Body with

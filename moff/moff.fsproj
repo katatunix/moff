@@ -58,13 +58,14 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Core.fs" />
     <Compile Include="DownloadPage.fs" />
-    <Compile Include="DownloadChapter.fs" />
+    <Compile Include="DownloadManyPages.fs" />
     <Compile Include="CommonParse.fs" />
     <Compile Include="TruyenTranhOnline.fs" />
     <Compile Include="TruyenTranhTuan.fs" />
     <Compile Include="Website.fs" />
     <Compile Include="MyConsole.fs" />
-    <Compile Include="Uc.fs" />
+    <Compile Include="UcChaper.fs" />
+    <Compile Include="UcManga.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
   <Import Project="$(FSharpTargetsPath)" />

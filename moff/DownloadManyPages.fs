@@ -1,19 +1,11 @@
 ﻿namespace moff
 
-open System.IO
 open NghiaBui.Common.Parallel
 
-module DownloadChapter =
+module DownloadManyPages =
 
-    let exec jobs (mangaFolder : string) onPageDone (info : ChapterInfo) =
-        let folder = Path.Combine (mangaFolder, info.Header.Title)
-        Directory.CreateDirectory folder |> ignore
-
-        File.WriteAllLines (
-            Path.Combine (folder, "links.txt"),
-            info.Header.Url :: info.PageUrls )
-
-        let enum = (info.PageUrls :> seq<string>).GetEnumerator ()
+    let exec jobs (folder : string) onPageDone (urls : string list) =
+        let enum = (urls :> seq<string>).GetEnumerator ()
         let mutable index = 0
         let next () = lock enum (fun _ ->
             if enum.MoveNext () then
@@ -23,13 +15,13 @@ module DownloadChapter =
                 None)
 
         let o = obj ()
-        let total = info.PageUrls.Length
+        let total = urls.Length
         runParallel jobs (fun _ ->
             let rec loop () =
                 match next () with
                 | None -> ()
                 | Some (pageUrl, index) ->
-                    let result = DownloadPage.execHardly pageUrl folder index
+                    let result = DownloadPage.exec pageUrl folder index
                     lock o (fun _ -> onPageDone index total pageUrl result)
                     loop ()
             loop ())
