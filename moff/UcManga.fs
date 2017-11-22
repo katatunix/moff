@@ -6,7 +6,7 @@ open MyConsole
 
 module UcManga =
 
-    let private processManga url cont =
+    let private handle url cont =
         sprintf "Manga url: %s" url |> infoln
         infoln "Fetch manga info ..."
 
@@ -23,7 +23,7 @@ module UcManga =
             cont mangaInfo
 
     let download url mangaFolder fromChapter toChapter =
-        processManga url (fun mangaInfo ->
+        handle url (fun mangaInfo ->
             Directory.CreateDirectory mangaFolder |> ignore
             File.WriteAllText (Path.Combine (mangaFolder, "link.txt"), url)
 
@@ -39,7 +39,7 @@ module UcManga =
                     UcChapter.download chapterUrl mangaFolder))
 
     let viewInfo url =
-        processManga url (fun mangaInfo ->
+        handle url (fun mangaInfo ->
             let total = mangaInfo.ChapterHeaders.Length
             mangaInfo.ChapterHeaders
             |> List.iteri (fun i chapterHeader ->
